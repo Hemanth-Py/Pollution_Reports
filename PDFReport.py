@@ -19,37 +19,67 @@ FONT_SIZE_10 = 10
 class PDFReport:
 
     def read_data_and_clean(self, xl_file):
+        """
+        this method reads the excel file and removes the empty rows in the sheet
+        :param xl_file: string representing the file path or name of excel file
+        :return: dataframe created for the excel file using pandas
+        """
         # reading excel file
         xl_data = pd.read_excel(xl_file)
         # dropping/removing empty rows
         xl_data.dropna(inplace=True)
         return xl_data
 
-    def set_page_title_in_pdf(self, pdf_file, page_title):
-        # font and size of the page heading
-        pdf_file.set_font(FONT_STYLE_TIMES, size=FONT_SIZE_30)
-        pdf_file.write(h=HEIGHT, txt=page_title + '\n')
-
-    def add_report_generated_date(self, pdf_file, xl_data):
-        # generated date to add it to the report
-        day = ' '.join(xl_data['Lastupdate'].unique())
-        generated_on_day = 'Generated on :' + day + '\n'
-        pdf_file.set_font(FONT_STYLE_TIMES, size=FONT_SIZE_20)
-        pdf_file.write(h=HEIGHT, txt=generated_on_day)
-        # h = height, txt = text to print
-
     def create_pdf_and_add_page(self):
+        """
+        this method creates the PDF file and adds a page to it
+        :return: object reference of PDF file
+        """
         # creating a file and adding a page to it
         pdf_file = FPDF(PAGE_ORIENTATION_PORTRAIT, format=A4_SIZE)
         pdf_file.add_page()
         return pdf_file
 
+    def set_page_title_in_pdf(self, pdf_file, page_title):
+        """
+        this method writes the title in the PDF page which is already created
+        :param pdf_file: object reference of PDF file
+        :param page_title: string representing the title to write in the page
+        """
+        # font and size of the page heading
+        pdf_file.set_font(FONT_STYLE_TIMES, size=FONT_SIZE_30)
+        pdf_file.write(h=HEIGHT, txt=page_title + '\n')
+
+    def add_report_generated_date(self, pdf_file, xl_data):
+        """
+        this method writes the generated date in the PDF which is present the table
+        :param pdf_file: object reference of PDF file
+        :param xl_data: dataframe created for the excel file using pandas
+        """
+        # generated date to add it to the report
+        day = ' '.join(xl_data['Lastupdate'].unique())
+        generated_on_day = 'Generated on :' + day + '\n'
+        pdf_file.set_font(FONT_STYLE_TIMES, size=FONT_SIZE_20)
+        pdf_file.write(h=HEIGHT, txt=generated_on_day)
+
     def grouping_cols(self, xl_data, gp_cols_list):
+        """
+        this method groups the columns of the table
+        :param xl_data: dataframe created for the excel file using pandas
+        :param gp_cols_list: list representing the columns to be grouped in the table
+        :return: dataframe created after grouping the columns
+        """
         # grouping the columns
         gp_data = xl_data.groupby(gp_cols_list)
         return gp_data
 
     def create_table_with_heading(self, pdf_file, gp_data, table_cols):
+        """
+        this method write the table with the heading in the PDF file
+        :param pdf_file: object reference of PDF file
+        :param gp_data: dataframe created after grouping the columns
+        :param table_cols: list representing the columns of table which going to write in PDF
+        """
         # looping through the grouped data
         for table_data in gp_data:  # create_table_with_heading
             # In table_data we get tuple of grouped columns and str of table
