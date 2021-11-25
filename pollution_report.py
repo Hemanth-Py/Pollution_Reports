@@ -27,7 +27,7 @@
 # a PDF in which the data is sorted by city wise pollution report and pollutant
 # wise report of india
 
-from PDFReport import PDFReport
+from Utilities.PDFReport import PDFReport
 
 
 def generate_city_pollution_report():  # file
