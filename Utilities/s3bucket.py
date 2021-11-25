@@ -93,7 +93,7 @@ class S3Connector:
         :param object_name: string representing the object name in the bucket
         :return: dataframe created by read the excel object
         """
-        obj = self.s3.get_object(Bucket=bucket_name, key=object_name)['Body']
+        obj = self.s3.get_object(Bucket=bucket_name, Key=object_name)['Body']
         file_obj = obj._raw_stream.read()
         df = pd.read_excel(file_obj)
         return df
