@@ -23,6 +23,8 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
+from io import BytesIO
+
 import boto3
 import pandas as pd
 
@@ -93,7 +95,13 @@ class S3Connector:
         :param object_name: string representing the object name in the bucket
         :return: dataframe created by read the excel object
         """
-        obj = self.s3.get_object(Bucket=bucket_name, Key=object_name)['Body']
-        file_obj = obj._raw_stream.read()
-        df = pd.read_excel(file_obj)
+        obj = self.s3.get_object(Bucket=bucket_name, Key=object_name)
+        file = BytesIO(obj['Body'].read())
+        df = pd.read_excel(file)
         return df
+
+
+if __name__ == '__main__':
+    s3 = S3Connector()
+    x = s3.read_bucket_object(bucket_name='pollutionreport', object_name='AirQuality-India-Realtime.xlsx')
+    print(x)
