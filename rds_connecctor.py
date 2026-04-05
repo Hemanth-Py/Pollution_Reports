@@ -22,13 +22,14 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
 from Utilities.rds import RDSDatabase
 
 # credentials to access the RDS instance
-rds_host = 'rds-python-1.c2b17fotakue.ap-south-1.rds.amazonaws.com'
-rds_username = 'admin'
-rds_password = 'hemanth123'
-rds_port = 3306
+rds_host = os.environ.get('RDS_HOST')
+rds_username = os.environ.get('RDS_USERNAME')
+rds_password = os.environ.get('RDS_PASSWORD')
+rds_port = int(os.environ.get('RDS_PORT', 3306))
 
 rds = RDSDatabase(rds_host, rds_username, rds_password)
 con_obj = rds.connect_database('Hemanth')
